@@ -11,11 +11,11 @@
 
   const WEB_APP_URL =
     (global.UTM_BUILDER_CONFIG && global.UTM_BUILDER_CONFIG.WEB_APP_URL) ||
-    "REPLACE_WITH_APPS_SCRIPT_WEB_APP_URL";
+    "https://script.google.com/macros/s/AKfycbxtuHBdJEsj9QGKeZdTIWdLM8vYMIEOrx3PlXJvED5i-UbixnRNNP1fH4qYrEdH9H-i/exec";
 
   const SHARED_SECRET =
     (global.UTM_BUILDER_CONFIG && global.UTM_BUILDER_CONFIG.SHARED_SECRET) ||
-    "REPLACE_WITH_SHARED_SECRET";
+    "jWmi-adPLdFRlwGWTP4AzGz_kpSwxJcbBl1T5T5y0Z0";
 
   function isConfigured() {
     return WEB_APP_URL && !WEB_APP_URL.startsWith("REPLACE_WITH");

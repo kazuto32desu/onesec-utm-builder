@@ -101,6 +101,20 @@ function setup() {
 }
 
 /**
+ * setSecret() — SHARED_SECRET を Code.gs ハードコード値に強制更新
+ * フロント（js/sheets-client.js）と Apps Script の SECRET を一致させるための設定関数。
+ * 1度実行すれば PropertiesService に反映され、以降は doPost/doGet が新値を使う（再デプロイ不要）。
+ */
+function setSecret() {
+  // フロント側 js/sheets-client.js の SHARED_SECRET と完全一致させる
+  const FIXED_SECRET = "jWmi-adPLdFRlwGWTP4AzGz_kpSwxJcbBl1T5T5y0Z0";
+  PropertiesService.getScriptProperties().setProperty("SHARED_SECRET", FIXED_SECRET);
+  Logger.log("✅ SHARED_SECRET を更新しました (長さ=" + FIXED_SECRET.length + "文字)");
+  Logger.log("→ Apps Script 再デプロイは不要です（PropertiesService の値が doPost/doGet で動的に読まれるため）");
+  return "OK";
+}
+
+/**
  * diagnose() — 設定状況を確認（書込なし、安全に何度でも実行可）
  * setup() でエラーが出たら、まず diagnose() で原因を特定
  */
