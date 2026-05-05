@@ -47,19 +47,104 @@ const HEADER = [
 
 // ========== 初期化（手動で1回実行） ==========
 
+/**
+ * setup() — ログシート作成 + ヘッダー書込
+ * 失敗時は実行ログ（表示 → ログ）に詳細が出ます
+ */
 function setup() {
-  const { sheetId, logSheetName } = getProps();
-  if (!sheetId) throw new Error("PropertiesService に SHEET_ID を設定してください");
-  const ss = SpreadsheetApp.openById(sheetId);
-  let sheet = ss.getSheetByName(logSheetName);
-  if (!sheet) {
-    sheet = ss.insertSheet(logSheetName);
+  Logger.log("setup() 開始");
+
+  // Step 1: PropertiesService 確認
+  const props = getProps();
+  Logger.log("SHEET_ID: " + (props.sheetId ? props.sheetId.substring(0, 12) + "...(計" + props.sheetId.length + "字)" : "(未設定)"));
+  Logger.log("LOG_SHEET_NAME: " + props.logSheetName);
+  Logger.log("SHARED_SECRET: " + (props.sharedSecret ? "(設定済 " + props.sharedSecret.length + "文字)" : "(未設定 — POST/GET の認証で必須)"));
+
+  if (!props.sheetId) {
+    throw new Error("❌ PropertiesService に SHEET_ID を設定してください。\n手順: プロジェクトの設定（⚙️アイコン）→ スクリプト プロパティ → スクリプト プロパティを追加 → SHEET_ID = スプシのID（URLの /d/XXXXX/edit の XXXXX 部分）");
   }
-  // ヘッダーが空または異なる場合に書き直す
-  const range = sheet.getRange(1, 1, 1, HEADER.length);
-  range.setValues([HEADER]).setFontWeight("bold").setBackground("#f0f0f0");
-  sheet.setFrozenRows(1);
-  Logger.log("setup completed: " + sheet.getName());
+
+  // Step 2: スプシを開く
+  let ss;
+  try {
+    ss = SpreadsheetApp.openById(props.sheetId);
+    Logger.log("✓ スプシを開きました: " + ss.getName());
+  } catch (err) {
+    throw new Error("❌ SHEET_ID のスプシを開けません: " + err.message + "\n— ID が正しいか／OAuth認可済か（初回は権限ダイアログを許可）／対象スプシに編集権限があるか を確認してください");
+  }
+
+  // Step 3: log シート取得 or 作成
+  let sheet = ss.getSheetByName(props.logSheetName);
+  if (!sheet) {
+    Logger.log("log シート（" + props.logSheetName + "）が存在しないため新規作成");
+    try {
+      sheet = ss.insertSheet(props.logSheetName);
+    } catch (err) {
+      throw new Error("❌ シート「" + props.logSheetName + "」の作成に失敗: " + err.message);
+    }
+  } else {
+    Logger.log("✓ 既存の log シート「" + sheet.getName() + "」を使用（" + sheet.getLastRow() + "行）");
+  }
+
+  // Step 4: ヘッダー書込
+  Logger.log("HEADER 列数: " + HEADER.length);
+  try {
+    const range = sheet.getRange(1, 1, 1, HEADER.length);
+    range.setValues([HEADER]).setFontWeight("bold").setBackground("#f0f0f0");
+    sheet.setFrozenRows(1);
+  } catch (err) {
+    throw new Error("❌ ヘッダー書込失敗: " + err.message);
+  }
+
+  Logger.log("✅ setup 完了: シート名=" + sheet.getName() + ", 列数=" + HEADER.length);
+  return "OK";
+}
+
+/**
+ * diagnose() — 設定状況を確認（書込なし、安全に何度でも実行可）
+ * setup() でエラーが出たら、まず diagnose() で原因を特定
+ */
+function diagnose() {
+  Logger.log("=========================");
+  Logger.log("UTM Builder Backend 診断");
+  Logger.log("=========================");
+
+  const props = getProps();
+  Logger.log("[Properties]");
+  Logger.log("  SHEET_ID:       " + (props.sheetId || "❌ 未設定"));
+  Logger.log("  LOG_SHEET_NAME: " + props.logSheetName);
+  Logger.log("  SHARED_SECRET:  " + (props.sharedSecret ? "✓ " + props.sharedSecret.length + "文字" : "❌ 未設定"));
+  Logger.log("");
+  Logger.log("[コード定数]");
+  Logger.log("  HEADER ("+HEADER.length+"列): " + JSON.stringify(HEADER));
+  Logger.log("");
+
+  if (!props.sheetId) {
+    Logger.log("⛔ SHEET_ID が未設定なので、これ以上のチェックはスキップ");
+    Logger.log("   → プロジェクトの設定 → スクリプトプロパティ から追加してください");
+    return;
+  }
+
+  Logger.log("[スプシアクセス]");
+  try {
+    const ss = SpreadsheetApp.openById(props.sheetId);
+    Logger.log("  ✓ スプシ名: " + ss.getName());
+    Logger.log("  ✓ URL: " + ss.getUrl());
+    const sheets = ss.getSheets().map(function (s) { return s.getName(); });
+    Logger.log("  既存シート: " + sheets.join(", "));
+
+    const sheet = ss.getSheetByName(props.logSheetName);
+    if (sheet) {
+      Logger.log("  ✓ ログシート存在: 行=" + sheet.getLastRow() + ", 列=" + sheet.getLastColumn());
+    } else {
+      Logger.log("  ⓘ ログシート「" + props.logSheetName + "」未作成（setup() を実行すると作成されます）");
+    }
+  } catch (err) {
+    Logger.log("  ❌ スプシアクセス失敗: " + err.message);
+    Logger.log("     原因候補: ①SHEET_IDが間違い ②OAuth未認可 ③スプシに権限なし");
+  }
+  Logger.log("=========================");
+  Logger.log("診断完了");
 }
 
 // ========== POST: ログ追記（複数行対応 v1.3） ==========
