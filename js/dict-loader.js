@@ -1,7 +1,7 @@
 /**
  * dict-loader.js
  * dict/*.json を fetch して window.UTM_DICT に格納する。
- * v1.2 規則に対応。
+ * 規則 v1.3 対応（フラット構造・カスタム入力対応）
  */
 
 (function (global) {
@@ -14,12 +14,9 @@
     const dicts = {};
     await Promise.all(
       DICT_FILES.map(async (name) => {
-        // cache buster でブラウザキャッシュを回避
         const url = `${DICT_BASE}${name}.json?t=${Date.now()}`;
         const res = await fetch(url, { cache: "no-cache" });
-        if (!res.ok) {
-          throw new Error(`辞書ロード失敗: ${name}.json (${res.status})`);
-        }
+        if (!res.ok) throw new Error(`辞書ロード失敗: ${name}.json (${res.status})`);
         dicts[name] = await res.json();
       })
     );
@@ -27,49 +24,54 @@
     return dicts;
   }
 
-  /** medium → 連動するsource候補のみ返す */
-  function filterSourcesByMedium(mediumValue) {
+  /** medium 配列を priority 昇順で返す */
+  function listMediums() {
     if (!global.UTM_DICT) return [];
+    return [...global.UTM_DICT.medium.values].sort((a, b) => a.priority - b.priority);
+  }
+
+  /** medium に紐づく source 配列を返す */
+  function sourcesByMedium(mediumValue) {
+    if (!global.UTM_DICT || !mediumValue) return [];
     return global.UTM_DICT.source.values
-      .filter((s) => s.medium === mediumValue && s.status !== "reserved")
+      .filter((s) => s.medium === mediumValue)
       .sort((a, b) => a.priority - b.priority);
   }
 
-  /** subject の全セクションを priority 順にフラット展開（折り畳み制御は呼び出し側で） */
-  function flatSubjects(includeLowFrequency = true) {
-    if (!global.UTM_DICT) return [];
-    const out = [];
-    global.UTM_DICT.subject.sections.forEach((sec) => {
-      if (sec.collapsed_by_default && !includeLowFrequency) return;
-      sec.values.forEach((v) => {
-        out.push({ section: sec.label, ...v });
-      });
-    });
-    return out.sort((a, b) => a.priority - b.priority);
+  /** medium ごとの選択モード */
+  function selectionModeFor(mediumValue) {
+    if (!global.UTM_DICT) return "single";
+    return (global.UTM_DICT.source._meta.selection_mode_by_medium || {})[mediumValue] || "single";
   }
 
-  /** appeal をpriority昇順で返す */
+  function listSubjects() {
+    if (!global.UTM_DICT) return [];
+    return [...global.UTM_DICT.subject.values].sort((a, b) => a.priority - b.priority);
+  }
+
   function listAppeals() {
     if (!global.UTM_DICT) return [];
     return [...global.UTM_DICT.appeal.values].sort((a, b) => a.priority - b.priority);
   }
 
-  /** role をカテゴリでグループ化して返す */
-  function listRolesGrouped() {
+  function listRoles() {
     if (!global.UTM_DICT) return [];
-    return global.UTM_DICT.role.categories.map((cat) => ({
-      name: cat.name,
-      label: cat.label,
-      description: cat.description,
-      values: [...cat.values].sort((a, b) => a.priority - b.priority),
-    }));
+    return [...global.UTM_DICT.role.values].sort((a, b) => a.priority - b.priority);
+  }
+
+  function listOwners() {
+    if (!global.UTM_DICT) return [];
+    return global.UTM_DICT.meta.owners || [];
   }
 
   global.DictLoader = {
     loadDicts,
-    filterSourcesByMedium,
-    flatSubjects,
+    listMediums,
+    sourcesByMedium,
+    selectionModeFor,
+    listSubjects,
     listAppeals,
-    listRolesGrouped,
+    listRoles,
+    listOwners,
   };
 })(window);

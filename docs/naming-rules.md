@@ -1,8 +1,8 @@
 ---
 title: UTMパラメータ命名規則
 type: reference
-version: v1.2
-updated: 2026-05-04
+version: v1.3
+updated: 2026-05-05
 tags:
   - type/reference
   - area/ops
@@ -11,19 +11,23 @@ aliases:
   - utm規則
   - utm命名規則
 ---
-# UTMパラメータ命名規則 v1.2
+# UTMパラメータ命名規則 v1.3
 
-公式LINE・メルマガ・Facebook・YouTube・有料広告から LP / WisdomBase への流入を正しく計測し、施策の効果を可視化するための共通ルール。
+公式LINE・メルマガ・Facebook・YouTube・有料広告・チラシ・紹介から LP / WisdomBase への流入を正しく計測し、施策の効果を可視化するための共通ルール。
 
-> **バージョン**: v1.2（2026-05-04 更新）。v1.0（2026-05-01）／ v1.1（2026-05-04 朝）からの変更点は末尾「ログ」参照。
+> **バージョン**: v1.3（2026-05-05 更新）。過去の変更点は末尾「ログ」参照。
 >
 > **適用範囲**: **2026年5月以降の新規キャンペーン** に適用。  
 > 2026年4月以前のキャンペーン（旧ルール）は触らず、過去データはそのまま保持する。  
 > **旧ルール（参考）**: [Google Docs - UTMパラメータ社内運用ルール](https://docs.google.com/document/d/1eRbTzgaOXLLmEeT8XjzWxNofUdUyiu-AXxohNOvL-ZI/edit)
 >
-> **設計方針（v1.2）**: 基本3パラメーター運用（utm_source / utm_medium / utm_campaign）。**配信ロール（同一CP内の複数配信を識別する4要素目）はすべての訴求で任意**（v1.1 で seminar 専用だったが v1.2 で汎用化）。utm_content / utm_term は必要時のみ使用。
+> **設計方針（v1.3）**: 基本3パラメーター運用（utm_source / utm_medium / utm_campaign）。すべての主要フィールドに「その他（自由入力）」枠を用意し、辞書非依存の運用を可能に。メルマガ（Benchmark等）配信先は**複数選択 → 個別URLを同時発行**できる。ロールは v1〜v8 のシンプルな番号制 + 自由入力に簡略化。
 >
-> **URLビルダー**: [[_experiments/utm-builder/_index|UTMキャンペーンURLビルダー要件定義]] ／ 辞書値の正本: [[_experiments/utm-builder/dictionary-source]] ／ 実装: [github.com/kazuto32desu/onesec-utm-builder](https://github.com/kazuto32desu/onesec-utm-builder)（private）
+> **URLビルダー**: 
+> - 🚀 ライブ: https://kazuto32desu.github.io/onesec-utm-builder/
+> - 📦 repo: [github.com/kazuto32desu/onesec-utm-builder](https://github.com/kazuto32desu/onesec-utm-builder)（public）
+> - 📋 要件定義: [[_experiments/utm-builder/_index]]
+> - 📚 辞書正本: [[_experiments/utm-builder/dictionary-source]]
 
 ---
 
@@ -39,20 +43,49 @@ aliases:
 
 ## 2. utm_source（配信元 × アカウント／リスト）
 
-媒体プレフィックス × アカウント or リストで階層化する。
+媒体プレフィックス × アカウント or リストで階層化する。**v1.3 で大幅再編**: LINE FA Academy 削除（他社のため）、メルマガリスト整理、Facebook 細分化。
 
-| 媒体 / リスト | 規定値 |
+### LINE
+
+| リスト | 規定値 |
 |---|---|
 | LINE: 1sec.公式 | `line_1sec` |
-| LINE: 細菌検査 | `line_kensa` |
-| LINE: FINAL ANSWER Academy | `line_fa_academy` |
-| メルマガ: Benchmark × 細菌検査リスト | `email_benchmark_kensa` |
-| メルマガ: Benchmark × 王道会員リスト | `email_benchmark_oudo` |
-| メルマガ: Benchmark × 新卒CPリスト | `email_benchmark_shinsotsu` |
-| メルマガ: Lステップ | `email_lstep_<リスト名>` |
-| Facebook | `facebook` |
-| Facebook: SHINYパートナー投稿 | `facebook_shiny` |
+| LINE: 細菌検査公式 | `line_kensa` |
+
+> ⚠️ v1.2 まで存在した `line_fa_academy`（Final Answer Academy）は **v1.3 で削除**。他社運営のため自社UTM管理対象外。
+
+### メルマガ（Benchmark）— **複数選択して同時配信可**（v1.3 新機能）
+
+| リスト | 規定値 |
+|---|---|
+| 王道の会員 | `email_benchmark_oudo_member` |
+| 王道1Dayセミナー参加者 | `email_benchmark_oudo_1day` |
+| 過去に企業セミナーを申込んだ人 | `email_benchmark_kigyou_seminar` |
+| 細菌検査ユーザー | `email_benchmark_kensa_users` |
+| 新卒CPリスト | `email_benchmark_shinsotsu` |
+| Lステップ × 王道（自動返信フロー・予定） | `email_lstep_oudo` |
+| その他のリスト | `email_benchmark_<入力名>`（ビルダーで自由入力） |
+
+→ ビルダーでメルマガを選ぶと**チェックボックス群**で複数選択可。選択したリスト数だけ別URLが同時生成され、Sheetsログにも個別行で記録される。これにより「3リスト同時に1キャンペーン配信」が1操作で完了。
+
+### Facebook（v1.3 細分化）
+
+| 種別 | 規定値 |
+|---|---|
+| グループ: 動物病院経営考察室 | `facebook_group_keiei` |
+| グループ: 獣医皮膚科情報 | `facebook_group_derm` |
+| パートナー投稿: SHINY | `facebook_shiny` |
+| その他のFacebook投稿 | `facebook_<入力名>`（自由入力） |
+
+### その他媒体
+
+| 媒体 | 規定値 |
+|---|---|
 | YouTube（チャンネル説明欄等） | `youtube` |
+| 有料広告 | （自由入力 例: `google_ads` `yahoo_ads`） |
+| チラシ: 新卒2980円CP | `flyer_shinsotsu` |
+| その他のチラシ | `flyer_<入力名>` |
+| 紹介 | （自由入力 例: `referral_friend`） |
 
 ### 新規 source を追加するときの命名
 
@@ -72,31 +105,36 @@ aliases:
 
 ## 3. utm_medium（媒体カテゴリ）
 
-GA4 のレポートで媒体ごとの比較ができるよう、`social` 一括をやめて細分化する。
+v1.3 で **8値**に拡張。GA4 のレポートで媒体ごとの比較ができるよう、`social` 一括をやめて細分化。
 
-| 媒体 | 規定値 |
-|---|---|
-| LINE | `messaging` |
-| Facebook / Instagram | `social` |
-| YouTube（オーガニック動画） | `video` |
-| メルマガ | `email` |
-| 有料広告 | `cpc` |
+| 媒体 | 規定値 | v1.3変更 |
+|---|---|---|
+| LINEメッセージ | `messaging` | — |
+| メルマガ | `email` | 配信先複数選択対応 |
+| Facebook | `social` | グループ／パートナー細分化 |
+| YouTube（オーガニック動画） | `video` | — |
+| 有料広告 | `cpc` | — |
+| チラシ | `flyer` | **v1.3 新規** |
+| 紹介 | `referral` | **v1.3 新規** |
+| その他 | （自由入力） | **v1.3 新規**：辞書になければ手動で値を入力可 |
+
+**注意**: `messaging` `flyer` は GA4 既定チャネルグループに不在 → カスタムチャネル設定要（Phase 2）。
 
 ---
 
 ## 4. utm_campaign（施策名）
 
-3要素または4要素を `_` で連結する。
+3要素または4要素を `_` で連結する。**v1.3 で「対象」→「サービス名」にリネーム**。
 
 ```
-[YYYYMM]_[対象]_[訴求][_ロール]
+[YYYYMM]_[サービス名]_[訴求][_ロール]
 ```
 
 - `YYYYMM`: 配信開始月の6桁（例: `202605` = 2026年5月）
   - 日次キャンペーンのみ `YYYYMMDD` 8桁を許可
-- `対象`: 科目・サービスの略称（[7. 略称辞書](#7-略称辞書) 参照）
+- `サービス名` (v1.3 でリネーム・5値+カスタム): 1sec の事業サービス略称（[7. 略称辞書](#7-略称辞書) 参照）
 - `訴求`: オファーやコンテンツ性質（[7. 略称辞書](#7-略称辞書) 参照）
-- `ロール` (v1.2でフラット化・**すべての訴求で任意**): 同一CP内に複数配信がある場合、配信回や役割を識別する4要素目。**シリーズ性は訴求側で固定せず、配信パターンに応じて Operator が判断**。
+- `ロール` (v1.3 で `v1`〜`v8` に簡略化・任意): 同一CP内に複数配信がある場合、第N配信を識別する4要素目。複雑な値は自由入力可。
 
 ### 「ロール」を付ける判断基準
 
@@ -108,20 +146,24 @@ GA4 のレポートで媒体ごとの比較ができるよう、`social` 一括�
 
 それ以外（単発配信）は3要素のまま。
 
-### 例
+### 例（v1.3 仕様）
+
+サービス名はサービス単位（科目別ではない）になり、ロールは v1〜v8 になった点に注意:
 
 | キャンペーン名 | 要素数 | 意味 |
 |---|---|---|
-| `202605_abx_archive` | 3 | 抗菌薬の王道 アーカイブ配信開始（単発） |
-| `202605_derm_firstmonth` | 3 | 皮膚科の王道 初月無料CP（単発） |
-| `202605_image_preview_ep2` | 4 | 画像診断 お試し動画 第2回（全6回シリーズ） |
-| `202605_image_preview_ep3` | 4 | 同上 第3回 |
-| `202606_resp_seminar_notice1` | 4 | 呼吸器科の王道 1-Day告知① D-65 |
-| `202606_resp_seminar_notice2` | 4 | 同上 告知② D-30 |
-| `202606_resp_seminar_remind_d7` | 4 | 同上 リマインド D-7 |
-| `202604_compass_seminar_notice1` | 4 | 1sec.Compass 無料セミナー告知① |
-| `202604_compass_seminar_archive` | 4 | 同上 配信後の録画告知 |
-| `202604_oudo_pricelock` | 3 | 王道シリーズ 価格据え置きCP（単発・旧ルール期） |
+| `202605_oudo_archive` | 3 | 王道e-Learning アーカイブ配信開始（単発） |
+| `202605_oudo_firstmonth` | 3 | 王道e-Learning 初月無料CP（単発） |
+| `202605_oudo_preview_v2` | 4 | 王道e-Learning 一部無料公開 第2配信（全6回シリーズの2本目） |
+| `202606_oudo1day_seminar_v1` | 4 | 王道1Day セミナー第1配信（告知①相当） |
+| `202606_oudo1day_seminar_v2` | 4 | 同上 第2配信 |
+| `202606_oudo1day_seminar_v3` | 4 | 同上 第3配信 |
+| `202606_oudo1day_seminar_remind_d7` | 4 | 同上 D-7リマインド（v表記で表現できないため自由入力ロール） |
+| `202604_compass_seminar_v1` | 4 | 1sec.Compass 無料セミナー第1配信 |
+| `202604_compass_seminar_archive` | 4 | 同上 配信後の録画告知（自由入力ロール） |
+| `202604_oudo_pricelock` | 3 | 王道シリーズ 価格据え置きCP（単発） |
+
+> **v1.2 → v1.3 移行注意**: v1.2 期に発行済みの `202606_resp_seminar_notice1` のような「科目名_seminar_notice1」形式のCPは **そのまま保持**（過去データ整合性のため）。v1.3 以降の新規CPでは **サービス名（oudo / oudo1day等）** を使用し、ロールは `v1〜v8`（または自由入力）を使う。
 
 ### GA4 での集計パターン
 
@@ -168,99 +210,55 @@ GA4 のレポートで媒体ごとの比較ができるよう、`social` 一括�
 
 ## 7. 略称辞書
 
-辞書の完全版（priority・状態列含む）は [[_experiments/utm-builder/dictionary-source]] にある。本セクションは命名規則の正本としての一覧。
+辞書の完全版（priority・状態列含む）は [[_experiments/utm-builder/dictionary-source]] および GitHub の [`dict/*.json`](https://github.com/kazuto32desu/desu/onesec-utm-builder/tree/main/dict) にある。本セクションは命名規則の正本としての一覧。
 
-### 7-1. 対象（utm_campaign の `[対象]`）
-
-#### 科目（王道シリーズ）
-
-| 略称 | フル | 王道頻度 |
-|---|---|---|
-| `derm` | 皮膚科 | ◎ |
-| `abx` | 抗菌薬 | ◎ |
-| `resp` | 呼吸器科 | ◎ |
-| `neuro` | 神経科 | ◎ |
-| `hema` | 血液内科 | ◎ |
-| `er` | 救急 | ○ |
-| `image` | 画像診断（胸部・腹部含む） | ○ |
-| `dx` | 臨床診断学 | ○ |
-| `cardio` | 循環器科 | ○ |
-| `endo` | 内分泌科 | △ |
-| `path` | 臨床病理 | △ |
-| `dental` | 歯科 | △ |
-| `nutri` | 栄養学 | △ |
-| `ophth` | 眼科 | △ |
-| `ortho` | 整形外科 | △ |
-| `behav` | 行動診療科 | △ |
-| `gi` | 消化器科 | △ |
-| `ent` | 耳科 | △ |
-| `iv` | 輸液 | △ |
-| `anes` | 麻酔科 | △ |
-
-#### サービス
+### 7-1. サービス名（v1.3 で「対象」からリネーム・5値＋自由入力）
 
 | 略称 | フル |
 |---|---|
-| `oudo` | 王道シリーズ（横断） |
+| `oudo` | 王道シリーズ e-Learning |
+| `oudo1day` | 王道シリーズ 1DAYセミナー |
 | `compass` | 1sec.Compass |
 | `media` | 1sec.メディア |
 | `reborn` | Re-Born |
+| (自由入力) | 新サービス・コラボ等。半角小文字英数字＋_ |
 
-### 7-2. 訴求（utm_campaign の `[訴求]`・v1.2でフラット化）
+> **v1.2 までの「科目辞書」（皮膚科 derm 等 20値）は v1.3 で廃止**。科目情報が必要な場合は訴求側で表現（例: `image_preview` のように複合化）するか、utm_content で補足する。
 
-訴求は単一カテゴリのフラット辞書（v1.1 の single/series 区分は廃止）。**シリーズ性は配信時に Operator がロール付与で判断**。
-
-| 略称 | フル | よく使うロール |
-|---|---|---|
-| `archive` | アーカイブ配信 | `ep1`〜（章別）／単発なら省略 |
-| `firstmonth` | 初月無料 | 単発が多い |
-| `pricelock` | 価格据え置き／改定告知 | 単発が多い |
-| `preview` | 一部無料公開 | `ep1`〜（連載動画）／単発なら省略 |
-| `freshers` | 新卒応援CP（v1.1新規） | 単発が多い |
-| `release` | 新科目リリース告知 | 単発が多い |
-| `tokuten` | 特典付与 | 単発が多い |
-| `freetrial` | 体験申込 | 単発が多い |
-| `seminar` | セミナー単発訴求（1-Day／無料／協賛） | `notice1/2/3` `remind_d7/d3` `qa` `archive` 等 |
-
-### 7-3. ロール（utm_campaign の `[ロール]`・v1.2で4カテゴリ化）
-
-すべての訴求で任意。同一CP内に複数配信があるときに識別子として使う。**辞書にない値は自由入力可**（小文字英数字＋`_`のみ）。
-
-#### A. シーケンス番号（汎用シリーズ）
-
-| 略称 | フル | 想定ユース |
-|---|---|---|
-| `ep1`〜`ep20` | 第N回／第Nエピソード | 画像診断お試し動画6本／アーカイブ章別配信／Compass連載ウェビナー／メディア協賛シリーズ |
-
-#### B. 告知（フェーズ別）
-
-| 略称 | フル | 想定ユース |
-|---|---|---|
-| `notice1` | 第1告知（初回告知） | 王道1-Day D-65 / メディア協賛初回告知 / Compass無料セミナー告知① |
-| `notice2` | 第2告知（再告知） | 王道1-Day D-30 / Compass告知② |
-| `notice3` | 第3告知（直前告知） | 王道1-Day D-15 |
-
-#### C. リマインド（直前催促）
+### 7-2. 訴求（utm_campaign の `[訴求]`・v1.3で「その他」追加）
 
 | 略称 | フル |
 |---|---|
-| `remind_d14` | 2週間前リマインド |
-| `remind_d7` | 1週間前リマインド（申込者向け） |
-| `remind_d3` | 3日前リマインド |
-| `remind_d1` | 前日リマインド |
-| `remind_dday` | 当日リマインド |
+| `archive` | アーカイブ配信 |
+| `firstmonth` | 初月無料 |
+| `pricelock` | 価格据え置き／改定告知 |
+| `preview` | 一部無料公開 |
+| `freshers` | 新卒応援CP（v1.1新規） |
+| `release` | 新科目リリース告知 |
+| `tokuten` | 特典付与 |
+| `freetrial` | 体験申込 |
+| `seminar` | セミナー（1Day／無料／協賛） |
+| (自由入力) | 辞書にない訴求。半角小文字英数字＋_ |
 
-#### D. 配信後フォロー
+### 7-3. ロール（v1.3 で v1〜v8 に大幅簡略化）
 
-| 略称 | フル | 想定ユース |
-|---|---|---|
-| `qa` | 質疑応答アーカイブ配信 | 王道1-Day D+22 |
-| `archive` | 録画配信告知 | Compass セミナー後／メディア協賛後 |
-| `recap` | 振り返り／要約配信 | レポート系 |
+**v1.2 までの sequence(ep1-ep20)/notice/reminder/followup の細分カテゴリは廃止**。シンプルな番号制 + 自由入力に統一。
+
+| 略称 | フル |
+|---|---|
+| `v1` | V1（第1配信） |
+| `v2` | V2（第2配信） |
+| `v3` | V3（第3配信） |
+| `v4` | V4（第4配信） |
+| `v5` | V5（第5配信） |
+| `v6` | V6（第6配信） |
+| `v7` | V7（第7配信） |
+| `v8` | V8（第8配信） |
+| (自由入力) | v表記で表現できない配信用（例: `notice1` `remind_d7` `qa` `archive` 等） |
 
 → 関連: [[projects/oudo/1day-seminars/_task-master|1-Dayセミナー共通タスクマスタ]]
 
-> 辞書にない値を使うときは、このノート（および [[_experiments/utm-builder/dictionary-source]]）に追記してから使う。担当者ごとのブレ（`derm`/`hifu`/`skin`）防止のため。
+> 辞書にない値を使うときは、このノート（および [[_experiments/utm-builder/dictionary-source]]）に追記してから使う。担当者ごとのブレ防止のため。
 
 ---
 
@@ -390,6 +388,21 @@ GA4 の「デフォルト チャネルグループ」は標準的な utm_medium 
 - [[projects/oudo/1day-seminars/_task-master|1-Dayセミナー共通タスクマスタ]]
 
 ## ログ
+- **2026-05-05 夜 — v1.3 改訂**: チームから挙がった一気の要望を反映した大規模アップデート。主な変更点:
+  - §3 utm_medium を 8値に拡張: `flyer`（チラシ）／`referral`（紹介）／**自由入力枠**を新設
+  - §2 utm_source 大幅再編:
+    - LINE: `line_fa_academy` 削除（他社運営のため）
+    - メルマガ: 配信先リスト群を整理（`oudo_member` `oudo_1day` `kigyou_seminar` `kensa_users` `shinsotsu` `lstep_oudo`）。**ビルダーで複数選択 → 個別URLを同時発行**できる新機能
+    - Facebook 細分化: `facebook_group_keiei`（経営考察室）／`facebook_group_derm`（皮膚科情報）／既存 `facebook_shiny`
+    - 全媒体に「**その他（自由入力）**」枠を追加
+  - §4 utm_campaign の「対象」→「**サービス名**」にリネーム
+  - §7-1 サービス辞書を5値+自由入力に削減: `oudo` `oudo1day` `compass` `media` `reborn`
+  - §7-1 **科目辞書（皮膚科 derm 等 20値）を廃止**。科目情報は訴求側または utm_content で表現
+  - §7-2 訴求に「その他（自由入力）」を追加
+  - §7-3 ロール辞書を **v1〜v8 + 自由入力** に大幅簡略化（旧 sequence/notice/reminder/followup を廃止）
+  - 担当者: 三橋・木下・**芦田**・**豊田（SHINY）**・その他（旧「あきら」「栗須」を更新）
+  - URLビルダー (https://kazuto32desu.github.io/onesec-utm-builder/) も同時にv1.3対応：複数source選択UI／複数URL同時発行／全主要フィールドに自由入力枠／配信予定日のhint改善
+  - GitHub repo public化（GitHub Pagesは無料プランではpublicが必要）
 - **2026-05-04 夕 — v1.2 改訂**: ロール部の汎用化。v1.1 で「seminar専用4要素必須」だったが、preview/archive/メディア協賛/Compass連載など他訴求でも同一CP内複数配信がある実態が判明し、**ロール部はすべての訴求で任意**に変更。主な変更点:
   - §4 utm_campaign のロール定義を「seminar時は必須」→「すべての訴求で任意」に変更。シリーズ性は Operator が判断
   - §7-2 訴求辞書から `single` / `series` カテゴリ列を削除（フラット化）。代わりに「よく使うロール」列を追記

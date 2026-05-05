@@ -1,6 +1,6 @@
 /**
  * validator.js
- * 入力値のバリデーション。規則 v1.2 準拠。
+ * 入力値のバリデーション。規則 v1.3 準拠（複数source対応）
  */
 
 (function (global) {
@@ -9,61 +9,62 @@
   const ALLOWED = /^[a-z0-9_]+$/;
 
   /**
+   * @param {Object} state
    * @returns {{ ok: boolean, errors: string[], warnings: string[] }}
    */
-  function validate({ lpUrl, source, medium, date, subject, appeal, role, content, term }) {
+  function validate(state) {
     const errors = [];
     const warnings = [];
 
-    // 必須
-    if (!lpUrl) errors.push("LP URL を入れてください");
-    else if (!/^https?:\/\//.test(lpUrl)) errors.push("LP URL は http:// または https:// で始めてください");
-    if (!medium) errors.push("配信媒体（utm_medium）を選んでください");
-    if (!source) errors.push("配信セグメント（utm_source）を選んでください");
-    if (!date) errors.push("配信予定日を入れてください");
-    if (!subject) errors.push("対象を選んでください");
-    if (!appeal) errors.push("訴求を選んでください");
+    if (!state.lpUrl) errors.push("LP URL を入れてください");
+    else if (!/^https?:\/\//.test(state.lpUrl)) errors.push("LP URL は http:// または https:// で始めてください");
 
-    // 文字種チェック（小文字英数字＋_）
+    if (!state.medium) errors.push("配信媒体（utm_medium）を選んでください");
+    if (!state.date) errors.push("配信予定日を入れてください");
+    if (!state.subject) errors.push("サービス名を選んでください");
+    if (!state.appeal) errors.push("訴求を選んでください");
+
+    // sources は配列。空ならエラー
+    if (!Array.isArray(state.sources) || state.sources.length === 0) {
+      errors.push("配信セグメント（utm_source）を選んでください");
+    }
+
+    // 文字種チェック
     [
-      ["utm_source", source],
-      ["utm_medium", medium],
-      ["対象", subject],
-      ["訴求", appeal],
-      ["ロール", role],
-      ["utm_content", content],
+      ["utm_medium", state.medium],
+      ["サービス名", state.subject],
+      ["訴求", state.appeal],
+      ["ロール", state.role],
+      ["utm_content", state.content],
     ].forEach(([name, value]) => {
       if (value && !ALLOWED.test(value)) {
         errors.push(`${name} は半角小文字英数字＋_ のみ使えます: "${value}"`);
       }
     });
-
-    // medium と source の整合
-    if (medium && source && global.UTM_DICT) {
-      const src = global.UTM_DICT.source.values.find((s) => s.value === source);
-      if (src && src.medium !== medium) {
-        errors.push(`配信セグメント "${source}" は媒体 "${src.medium}" 用です（選択中の媒体と不整合）`);
+    (state.sources || []).forEach((s) => {
+      if (s && !ALLOWED.test(s)) {
+        errors.push(`utm_source は半角小文字英数字＋_ のみ使えます: "${s}"`);
       }
-    }
-
-    // 訴求 = seminar の時はロール推奨（必須ではないがwarning）
-    if (appeal === "seminar" && !role) {
-      warnings.push("訴求=seminar はロール（notice1/2/3, remind_*, qa, archive 等）を付けるのが通常です");
-    }
+    });
 
     // utm_term は cpc 時のみ
-    if (term && medium !== "cpc") {
+    if (state.term && state.medium !== "cpc") {
       warnings.push("utm_term は通常 medium=cpc（有料広告）の時のみ使います");
     }
 
     return { ok: errors.length === 0, errors, warnings };
   }
 
-  /**
-   * 軽量チェック（ボタン活性判定用）。エラー有無だけ返す。
-   */
-  function isComposable({ lpUrl, source, medium, date, subject, appeal }) {
-    return Boolean(lpUrl && source && medium && date && subject && appeal);
+  function isComposable(state) {
+    return Boolean(
+      state.lpUrl &&
+        state.medium &&
+        state.date &&
+        state.subject &&
+        state.appeal &&
+        Array.isArray(state.sources) &&
+        state.sources.length > 0
+    );
   }
 
   global.Validator = { validate, isComposable };

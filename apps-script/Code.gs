@@ -62,7 +62,7 @@ function setup() {
   Logger.log("setup completed: " + sheet.getName());
 }
 
-// ========== POST: ログ追記 ==========
+// ========== POST: ログ追記（複数行対応 v1.3） ==========
 
 function doPost(e) {
   try {
@@ -74,15 +74,24 @@ function doPost(e) {
     if (!props.sharedSecret) return jsonResponse({ ok: false, error: "SHARED_SECRET未設定" });
     if (body.secret !== props.sharedSecret) return jsonResponse({ ok: false, error: "認証失敗" });
 
-    const entry = body.entry || {};
+    // v1.3: entries[] の複数行対応。entry 単一は後方互換で残す
+    const entries = Array.isArray(body.entries) ? body.entries : (body.entry ? [body.entry] : []);
+    if (entries.length === 0) return jsonResponse({ ok: false, error: "entries 空" });
+
     const ss = SpreadsheetApp.openById(props.sheetId);
     const sheet = ss.getSheetByName(props.logSheetName);
     if (!sheet) return jsonResponse({ ok: false, error: "ログシートが見つかりません" });
 
-    const row = HEADER.map((key) => entry[key] || "");
-    sheet.appendRow(row);
-    const lastRow = sheet.getLastRow();
-    return jsonResponse({ ok: true, row: lastRow });
+    const rows = entries.map((entry) => HEADER.map((key) => entry[key] || ""));
+    const lastRowBefore = sheet.getLastRow();
+    sheet.getRange(lastRowBefore + 1, 1, rows.length, HEADER.length).setValues(rows);
+    const lastRowAfter = sheet.getLastRow();
+    return jsonResponse({
+      ok: true,
+      rows: rows.map((_, i) => lastRowBefore + 1 + i),
+      first_row: lastRowBefore + 1,
+      last_row: lastRowAfter,
+    });
   } catch (err) {
     return jsonResponse({ ok: false, error: String(err) });
   }

@@ -1,14 +1,14 @@
 {
   "_meta": {
     "title": "utm_medium 辞書",
-    "rule_version": "v1.2",
-    "updated": "2026-05-04",
-    "note": "GA4標準準拠の固定5値。新規追加は規則改訂が必要。"
+    "rule_version": "v1.3",
+    "updated": "2026-05-05",
+    "note": "v1.3 で flyer/referral/other を追加。other は自由入力可。"
   },
   "values": [
     {
       "value": "messaging",
-      "label": "LINE等メッセージング",
+      "label": "LINEメッセージ",
       "priority": 1,
       "frequency": "high",
       "note": "LINE全媒体。GA4既定チャネル不在のため要カスタム設定（Phase 2）"
@@ -18,14 +18,14 @@
       "label": "メルマガ",
       "priority": 2,
       "frequency": "high",
-      "note": "Benchmark / Lステップ"
+      "note": "Benchmark / Lステップ。複数リスト同時配信に対応"
     },
     {
       "value": "social",
-      "label": "Facebook / Instagram",
+      "label": "Facebook",
       "priority": 3,
-      "frequency": "low",
-      "note": "オーガニック投稿"
+      "frequency": "mid",
+      "note": "グループ投稿／パートナー投稿"
     },
     {
       "value": "video",
@@ -40,6 +40,28 @@
       "priority": 5,
       "frequency": "none",
       "note": "未使用・予約"
+    },
+    {
+      "value": "flyer",
+      "label": "チラシ",
+      "priority": 6,
+      "frequency": "mid",
+      "note": "印刷物QR。GA4既定チャネル不在 → カスタム設定（Phase 2）。新卒チラシ等"
+    },
+    {
+      "value": "referral",
+      "label": "紹介",
+      "priority": 7,
+      "frequency": "low",
+      "note": "口コミ・既存会員からの紹介リンク"
+    },
+    {
+      "value": "_custom",
+      "label": "その他（自由入力）",
+      "priority": 99,
+      "frequency": "rare",
+      "is_custom": true,
+      "note": "選択時にテキスト入力フィールドが出る。値は半角小文字英数字＋_"
     }
   ]
 }

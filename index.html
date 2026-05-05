@@ -10,7 +10,7 @@
 <body>
   <header class="app-header">
     <h1>UTMキャンペーンURLビルダー</h1>
-    <p class="rule-badge" id="rule-badge">命名規則 <span id="rule-version">v1.2</span></p>
+    <p class="rule-badge">命名規則 <span id="rule-version">v1.3</span></p>
   </header>
 
   <main class="container">
@@ -27,28 +27,41 @@
       <div class="field">
         <label for="medium">配信媒体 (utm_medium) <span class="required">*</span></label>
         <select id="medium" required></select>
+        <input type="text" id="medium-custom" class="custom-input" placeholder="medium 値を半角小文字英数字＋_ で入力" hidden />
       </div>
 
-      <div class="field">
-        <label for="source">配信セグメント (utm_source) <span class="required">*</span></label>
+      <div class="field" id="source-field">
+        <label id="source-label" for="source">配信セグメント (utm_source) <span class="required">*</span></label>
+
+        <!-- 単一選択モード（messaging/social/video/cpc/flyer/referral/_custom） -->
         <select id="source" required></select>
-        <p class="hint">配信媒体を先に選ぶと候補が絞られます</p>
+
+        <!-- 複数選択モード（email のみ。チェックボックス群） -->
+        <div id="source-multi" hidden>
+          <p class="hint">配信先リストを複数選択できます（選択した数だけURLが生成されます）</p>
+          <div id="source-multi-list" class="checkbox-list"></div>
+        </div>
+
+        <!-- 「その他」自由入力（単一・複数共通） -->
+        <input type="text" id="source-custom" class="custom-input" placeholder="セグメント名を入力" hidden />
       </div>
 
       <div class="field">
         <label for="delivery-date">配信予定日 <span class="required">*</span></label>
         <input type="date" id="delivery-date" required />
-        <p class="hint">utm_campaign の YYYYMM が自動算出されます</p>
+        <p class="hint">📅 決まっていなければ大体の日付を入力ください（utm_campaign の YYYYMM 自動算出に使用）</p>
       </div>
 
       <div class="field">
-        <label for="subject">対象 <span class="required">*</span></label>
+        <label for="subject">サービス名 <span class="required">*</span></label>
         <select id="subject" required></select>
+        <input type="text" id="subject-custom" class="custom-input" placeholder="サービス略称を入力（半角小文字英数字＋_）" hidden />
       </div>
 
       <div class="field">
         <label for="appeal">訴求 <span class="required">*</span></label>
         <select id="appeal" required></select>
+        <input type="text" id="appeal-custom" class="custom-input" placeholder="訴求略称を入力" hidden />
       </div>
 
       <div class="field">
@@ -56,7 +69,8 @@
         <select id="role">
           <option value="">— なし（単発配信）—</option>
         </select>
-        <p class="hint" id="role-hint">同一CP内で複数回配信するときに付与（preview 連載 / seminar 告知 / リマインド等）</p>
+        <input type="text" id="role-custom" class="custom-input" placeholder="ロール値を入力" hidden />
+        <p class="hint">同一CP内で複数回配信するときに付与（V1=第1配信 / V2=第2配信 …）</p>
       </div>
 
       <details class="advanced">
@@ -79,11 +93,6 @@
           <label for="meta-owner">担当者</label>
           <select id="meta-owner">
             <option value="">— 選択 —</option>
-            <option value="三橋">三橋</option>
-            <option value="木下">木下</option>
-            <option value="あきら">あきら</option>
-            <option value="栗須">栗須</option>
-            <option value="その他">その他</option>
           </select>
         </div>
         <div class="field">
@@ -107,9 +116,10 @@
       </div>
 
       <div class="preview-block">
-        <h3>完成URL</h3>
-        <code class="preview-url" id="preview-url">—</code>
-        <button class="btn btn-secondary" id="btn-copy" disabled>📋 コピー</button>
+        <h3>完成URL <span id="preview-url-count" class="badge"></span></h3>
+        <div id="preview-urls" class="preview-urls">
+          <code class="preview-url placeholder">—</code>
+        </div>
       </div>
 
       <div class="validation" id="validation" aria-live="polite"></div>

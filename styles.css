@@ -205,6 +205,92 @@ body {
   margin: 16px 0 4px;
 }
 
+/* ========== Custom input (free-form for "その他") ========== */
+.custom-input {
+  margin-top: 6px;
+}
+
+/* ========== Multi-source checkbox list ========== */
+.checkbox-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-code-bg);
+}
+.checkbox-list label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 400;
+  cursor: pointer;
+  padding: 4px 0;
+  margin: 0;
+}
+.checkbox-list label:hover {
+  color: var(--color-primary);
+}
+.checkbox-list input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  cursor: pointer;
+}
+
+/* ========== Multi-URL preview ========== */
+.preview-urls {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.preview-urls .preview-url-row {
+  position: relative;
+  background: var(--color-code-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+}
+.preview-urls .preview-url-row .url-source-tag {
+  display: block;
+  font-size: 11px;
+  color: var(--color-text-muted);
+  margin-bottom: 4px;
+  font-family: var(--font-sans);
+}
+.preview-urls .preview-url-row code {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  word-break: break-all;
+  white-space: pre-wrap;
+  line-height: 1.4;
+}
+.preview-urls .preview-url-row .btn-mini {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  font-size: 11px;
+  padding: 2px 8px;
+}
+.preview-urls .placeholder {
+  color: var(--color-text-muted);
+}
+
+.badge {
+  display: inline-block;
+  font-size: 10px;
+  background: var(--color-primary);
+  color: #fff;
+  padding: 2px 7px;
+  border-radius: 999px;
+  font-weight: 600;
+  margin-left: 6px;
+}
+.badge:empty { display: none; }
+
 /* ========== Validation ========== */
 .validation {
   margin: 10px 0;

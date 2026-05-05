@@ -1,9 +1,19 @@
 {
   "_meta": {
     "title": "utm_source 辞書",
-    "rule_version": "v1.2",
-    "updated": "2026-05-04",
-    "note": "媒体プレフィックス×アカウント／リスト名で命名。新規はOperatorが下書き→三橋承認→ここに追記."
+    "rule_version": "v1.3",
+    "updated": "2026-05-05",
+    "note": "v1.3 大幅再編。媒体ごとに UI が変わる: messaging=単一/email=複数選択/social=単一階層/その他=自由入力。multi_select_when_medium で配信先リスト複数選択を有効化。",
+    "selection_mode_by_medium": {
+      "messaging": "single",
+      "email": "multi",
+      "social": "single",
+      "video": "single",
+      "cpc": "single",
+      "flyer": "single_or_custom",
+      "referral": "single_or_custom",
+      "_custom": "custom"
+    }
   },
   "values": [
     {
@@ -21,62 +31,154 @@
       "status": "active"
     },
     {
-      "value": "line_fa_academy",
-      "medium": "messaging",
-      "label": "LINE: FA Academy",
-      "priority": 3,
+      "value": "email_benchmark_oudo_member",
+      "medium": "email",
+      "label": "Benchmark: 王道の会員",
+      "priority": 11,
+      "status": "active",
+      "note": "v1.3 で email_benchmark_oudo から改名"
+    },
+    {
+      "value": "email_benchmark_oudo_1day",
+      "medium": "email",
+      "label": "Benchmark: 王道1Dayセミナー参加者",
+      "priority": 12,
       "status": "active"
     },
     {
-      "value": "email_benchmark_oudo",
+      "value": "email_benchmark_kigyou_seminar",
       "medium": "email",
-      "label": "メルマガ Benchmark × 王道会員",
-      "priority": 4,
+      "label": "Benchmark: 過去に企業セミナーを申込んだ人",
+      "priority": 13,
       "status": "active"
     },
     {
-      "value": "email_benchmark_kensa",
+      "value": "email_benchmark_kensa_users",
       "medium": "email",
-      "label": "メルマガ Benchmark × 細菌検査ユーザー1300",
-      "priority": 5,
-      "status": "active"
+      "label": "Benchmark: 細菌検査ユーザー",
+      "priority": 14,
+      "status": "active",
+      "note": "v1.2 の email_benchmark_kensa を改名（命名統一）"
     },
     {
       "value": "email_benchmark_shinsotsu",
       "medium": "email",
-      "label": "メルマガ Benchmark × 新卒CPリスト",
-      "priority": 6,
+      "label": "Benchmark: 新卒CPリスト",
+      "priority": 15,
       "status": "active"
     },
     {
       "value": "email_lstep_oudo",
       "medium": "email",
       "label": "Lステップ × 王道（自動返信フロー）",
-      "priority": 7,
+      "priority": 16,
       "status": "reserved",
       "note": "構築待ち"
     },
     {
-      "value": "facebook",
+      "value": "_custom",
+      "medium": "email",
+      "label": "その他のBenchmarkリスト（名前を入力）",
+      "priority": 99,
+      "status": "active",
+      "is_custom": true,
+      "custom_prefix": "email_benchmark_",
+      "note": "選択時にリスト名を自由入力。値は email_benchmark_<入力> として送信"
+    },
+    {
+      "value": "facebook_group_keiei",
       "medium": "social",
-      "label": "Facebook（自社投稿）",
-      "priority": 8,
-      "status": "reserved"
+      "label": "Facebook グループ: 動物病院経営考察室",
+      "priority": 21,
+      "status": "active"
+    },
+    {
+      "value": "facebook_group_derm",
+      "medium": "social",
+      "label": "Facebook グループ: 獣医皮膚科情報",
+      "priority": 22,
+      "status": "active"
     },
     {
       "value": "facebook_shiny",
       "medium": "social",
-      "label": "Facebook（SHINYパートナー投稿）",
-      "priority": 9,
+      "label": "Facebook パートナー投稿: SHINY",
+      "priority": 23,
+      "status": "active"
+    },
+    {
+      "value": "_custom",
+      "medium": "social",
+      "label": "その他のFacebook投稿（名前を入力）",
+      "priority": 98,
       "status": "active",
-      "note": "v1.1 パッチで追加"
+      "is_custom": true,
+      "custom_prefix": "facebook_",
+      "note": "選択時に値を自由入力"
     },
     {
       "value": "youtube",
       "medium": "video",
       "label": "YouTube（チャンネル説明欄等）",
-      "priority": 10,
-      "status": "reserved"
+      "priority": 31,
+      "status": "active"
+    },
+    {
+      "value": "_custom",
+      "medium": "video",
+      "label": "その他の動画媒体（名前を入力）",
+      "priority": 99,
+      "status": "active",
+      "is_custom": true,
+      "custom_prefix": "",
+      "note": "選択時に自由入力"
+    },
+    {
+      "value": "_custom",
+      "medium": "cpc",
+      "label": "有料広告のソース（名前を入力）",
+      "priority": 41,
+      "status": "active",
+      "is_custom": true,
+      "custom_prefix": "",
+      "note": "google_ads / yahoo_ads など"
+    },
+    {
+      "value": "flyer_shinsotsu",
+      "medium": "flyer",
+      "label": "チラシ: 新卒2980円CP",
+      "priority": 51,
+      "status": "active"
+    },
+    {
+      "value": "_custom",
+      "medium": "flyer",
+      "label": "その他のチラシ（名前を入力）",
+      "priority": 99,
+      "status": "active",
+      "is_custom": true,
+      "custom_prefix": "flyer_",
+      "note": "選択時に自由入力"
+    },
+    {
+      "value": "_custom",
+      "medium": "referral",
+      "label": "紹介元（名前を入力）",
+      "priority": 61,
+      "status": "active",
+      "is_custom": true,
+      "custom_prefix": "",
+      "note": "誰／どこからの紹介か"
+    },
+    {
+      "value": "_custom",
+      "medium": "_custom",
+      "label": "その他のソース（名前を入力）",
+      "priority": 99,
+      "status": "active",
+      "is_custom": true,
+      "custom_prefix": "",
+      "note": "medium=その他 を選んだ時のみ"
     }
   ]
 }
