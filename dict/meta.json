@@ -1,0 +1,21 @@
+{
+  "rule_version": "v1.2",
+  "rule_updated": "2026-05-04",
+  "naming_pattern": "[YYYYMM]_[対象]_[訴求][_ロール]",
+  "rule_source_vault": "1sec.works/_ops/utm-naming-conventions.md",
+  "rule_source_url": "https://github.com/kazuto32desu/onesec-utm-builder/blob/main/docs/naming-rules.md",
+  "applicable_from": "2026-05-01",
+  "old_rule_reference": "https://docs.google.com/document/d/1eRbTzgaOXLLmEeT8XjzWxNofUdUyiu-AXxohNOvL-ZI/edit",
+  "validation": {
+    "lowercase_only": true,
+    "allowed_chars_regex": "^[a-z0-9_]+$",
+    "campaign_min_elements": 3,
+    "campaign_max_elements": 4,
+    "yyyymm_pattern": "^\\d{6}$",
+    "yyyymmdd_pattern": "^\\d{8}$"
+  },
+  "ga4_notes": {
+    "messaging_unassigned": "messaging はGA4既定チャネル不在 → カスタム設定（Phase 2）",
+    "qr_unassigned": "QR/紙媒体も既定不在 → カスタム設定要"
+  }
+}

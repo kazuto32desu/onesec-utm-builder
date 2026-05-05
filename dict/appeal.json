@@ -1,0 +1,76 @@
+{
+  "_meta": {
+    "title": "utm_campaign の [訴求] 辞書",
+    "rule_version": "v1.2",
+    "updated": "2026-05-04",
+    "note": "v1.2でフラット化。シリーズ性は配信時にロール付与で判断。recommended_role 列はUI誘導用。"
+  },
+  "values": [
+    {
+      "value": "archive",
+      "label": "アーカイブ配信開始",
+      "priority": 1,
+      "frequency": "high",
+      "recommended_role_category": ["sequence", "none"],
+      "note": "章別配信なら ep1〜、単発なら省略"
+    },
+    {
+      "value": "firstmonth",
+      "label": "初月無料CP",
+      "priority": 2,
+      "frequency": "high",
+      "recommended_role_category": ["none"]
+    },
+    {
+      "value": "pricelock",
+      "label": "価格据え置き／改定告知",
+      "priority": 3,
+      "frequency": "high",
+      "recommended_role_category": ["none"]
+    },
+    {
+      "value": "preview",
+      "label": "一部無料公開",
+      "priority": 4,
+      "frequency": "mid",
+      "recommended_role_category": ["sequence", "none"],
+      "note": "連載動画なら ep1〜、単発なら省略"
+    },
+    {
+      "value": "freshers",
+      "label": "新卒応援CP",
+      "priority": 5,
+      "frequency": "high",
+      "recommended_role_category": ["none"]
+    },
+    {
+      "value": "release",
+      "label": "新科目リリース告知",
+      "priority": 6,
+      "frequency": "high",
+      "recommended_role_category": ["none"]
+    },
+    {
+      "value": "tokuten",
+      "label": "特典付与",
+      "priority": 7,
+      "frequency": "low",
+      "recommended_role_category": ["none"]
+    },
+    {
+      "value": "freetrial",
+      "label": "体験申込",
+      "priority": 8,
+      "frequency": "low",
+      "recommended_role_category": ["none"]
+    },
+    {
+      "value": "seminar",
+      "label": "セミナー（1-Day／無料／協賛）",
+      "priority": 11,
+      "frequency": "high",
+      "recommended_role_category": ["notice", "reminder", "followup"],
+      "note": "通常はロール必須。告知/リマインド/配信後フォロー使用"
+    }
+  ]
+}

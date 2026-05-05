@@ -1,0 +1,82 @@
+{
+  "_meta": {
+    "title": "utm_source 辞書",
+    "rule_version": "v1.2",
+    "updated": "2026-05-04",
+    "note": "媒体プレフィックス×アカウント／リスト名で命名。新規はOperatorが下書き→三橋承認→ここに追記."
+  },
+  "values": [
+    {
+      "value": "line_1sec",
+      "medium": "messaging",
+      "label": "LINE: 1sec.公式（全体配信枠）",
+      "priority": 1,
+      "status": "active"
+    },
+    {
+      "value": "line_kensa",
+      "medium": "messaging",
+      "label": "LINE: 細菌検査公式",
+      "priority": 2,
+      "status": "active"
+    },
+    {
+      "value": "line_fa_academy",
+      "medium": "messaging",
+      "label": "LINE: FA Academy",
+      "priority": 3,
+      "status": "active"
+    },
+    {
+      "value": "email_benchmark_oudo",
+      "medium": "email",
+      "label": "メルマガ Benchmark × 王道会員",
+      "priority": 4,
+      "status": "active"
+    },
+    {
+      "value": "email_benchmark_kensa",
+      "medium": "email",
+      "label": "メルマガ Benchmark × 細菌検査ユーザー1300",
+      "priority": 5,
+      "status": "active"
+    },
+    {
+      "value": "email_benchmark_shinsotsu",
+      "medium": "email",
+      "label": "メルマガ Benchmark × 新卒CPリスト",
+      "priority": 6,
+      "status": "active"
+    },
+    {
+      "value": "email_lstep_oudo",
+      "medium": "email",
+      "label": "Lステップ × 王道（自動返信フロー）",
+      "priority": 7,
+      "status": "reserved",
+      "note": "構築待ち"
+    },
+    {
+      "value": "facebook",
+      "medium": "social",
+      "label": "Facebook（自社投稿）",
+      "priority": 8,
+      "status": "reserved"
+    },
+    {
+      "value": "facebook_shiny",
+      "medium": "social",
+      "label": "Facebook（SHINYパートナー投稿）",
+      "priority": 9,
+      "status": "active",
+      "note": "v1.1 パッチで追加"
+    },
+    {
+      "value": "youtube",
+      "medium": "video",
+      "label": "YouTube（チャンネル説明欄等）",
+      "priority": 10,
+      "status": "reserved"
+    }
+  ]
+}

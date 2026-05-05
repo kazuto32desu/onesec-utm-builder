@@ -1,0 +1,272 @@
+/* ========== Reset & Base ========== */
+*, *::before, *::after { box-sizing: border-box; }
+:root {
+  --color-bg: #f7f8fa;
+  --color-surface: #ffffff;
+  --color-border: #e1e4e8;
+  --color-text: #24292f;
+  --color-text-muted: #57606a;
+  --color-primary: #0969da;
+  --color-primary-hover: #0860c7;
+  --color-success: #1a7f37;
+  --color-warning: #9a6700;
+  --color-danger: #cf222e;
+  --color-code-bg: #f6f8fa;
+  --radius: 6px;
+  --gap: 12px;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Kaku Gothic ProN", sans-serif;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.5;
+}
+
+/* ========== Header / Footer ========== */
+.app-header {
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.app-header h1 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+.rule-badge {
+  margin: 0;
+  font-size: 12px;
+  color: var(--color-text-muted);
+  background: var(--color-code-bg);
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.app-footer {
+  text-align: center;
+  padding: 20px;
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+.app-footer a { color: var(--color-text-muted); }
+
+/* ========== Layout ========== */
+.container {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 0 16px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+@media (max-width: 768px) {
+  .container { grid-template-columns: 1fr; }
+}
+
+.form-pane, .preview-pane {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+.form-pane h2, .preview-pane h2 {
+  margin-top: 0;
+  font-size: 16px;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 10px;
+}
+
+/* ========== Form fields ========== */
+.field {
+  margin-bottom: var(--gap);
+}
+.field label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.field label .required { color: var(--color-danger); margin-left: 2px; }
+.field input[type="text"],
+.field input[type="url"],
+.field input[type="date"],
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-family: inherit;
+  background: var(--color-surface);
+}
+.field input:focus, .field select:focus, .field textarea:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -1px;
+  border-color: var(--color-primary);
+}
+.field input:disabled {
+  background: var(--color-code-bg);
+  cursor: not-allowed;
+}
+.hint {
+  margin: 4px 0 0;
+  font-size: 11px;
+  color: var(--color-text-muted);
+}
+
+.advanced {
+  margin: 16px 0 8px;
+  border-top: 1px dashed var(--color-border);
+  padding-top: 12px;
+}
+.advanced summary {
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--color-text-muted);
+  user-select: none;
+}
+.advanced[open] summary {
+  margin-bottom: 8px;
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+/* ========== Preview ========== */
+.preview-block {
+  margin-bottom: 14px;
+}
+.preview-block h3 {
+  margin: 0 0 6px;
+  font-size: 12px;
+  color: var(--color-text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.preview-line, .preview-url {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  background: var(--color-code-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  word-break: break-all;
+  white-space: pre-wrap;
+  line-height: 1.4;
+  margin-bottom: 6px;
+}
+.preview-url { font-size: 12px; }
+
+/* ========== Buttons ========== */
+.btn {
+  display: inline-block;
+  padding: 8px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  background: var(--color-surface);
+  color: var(--color-text);
+  margin-right: 6px;
+  margin-bottom: 6px;
+  transition: background 0.1s;
+}
+.btn:hover:not(:disabled) {
+  background: var(--color-code-bg);
+}
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.btn-primary {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
+}
+.btn-primary:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+}
+.btn-secondary {
+  background: var(--color-surface);
+}
+
+.actions {
+  margin: 16px 0 4px;
+}
+
+/* ========== Validation ========== */
+.validation {
+  margin: 10px 0;
+  font-size: 13px;
+  min-height: 20px;
+}
+.validation.success { color: var(--color-success); }
+.validation.warning { color: var(--color-warning); }
+.validation.error { color: var(--color-danger); }
+.validation ul {
+  margin: 4px 0;
+  padding-left: 20px;
+}
+
+/* ========== Recent list ========== */
+.recent-list {
+  margin-top: 20px;
+  border-top: 1px solid var(--color-border);
+  padding-top: 16px;
+}
+.recent-list h3 {
+  margin: 0 0 8px;
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+.recent-list ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 320px;
+  overflow-y: auto;
+}
+.recent-list li {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--color-border);
+  cursor: pointer;
+  font-size: 12px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 8px;
+  align-items: center;
+}
+.recent-list li:hover {
+  background: var(--color-code-bg);
+}
+.recent-list .recent-date {
+  font-family: var(--font-mono);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+.recent-list .recent-campaign {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  word-break: break-all;
+}
+
+/* ========== Status / toast ========== */
+.status {
+  margin: 12px 0 0;
+  font-size: 13px;
+  min-height: 20px;
+}
+.status.success { color: var(--color-success); }
+.status.error { color: var(--color-danger); }
+.status.loading { color: var(--color-text-muted); font-style: italic; }

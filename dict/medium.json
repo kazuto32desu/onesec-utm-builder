@@ -1,0 +1,45 @@
+{
+  "_meta": {
+    "title": "utm_medium 辞書",
+    "rule_version": "v1.2",
+    "updated": "2026-05-04",
+    "note": "GA4標準準拠の固定5値。新規追加は規則改訂が必要。"
+  },
+  "values": [
+    {
+      "value": "messaging",
+      "label": "LINE等メッセージング",
+      "priority": 1,
+      "frequency": "high",
+      "note": "LINE全媒体。GA4既定チャネル不在のため要カスタム設定（Phase 2）"
+    },
+    {
+      "value": "email",
+      "label": "メルマガ",
+      "priority": 2,
+      "frequency": "high",
+      "note": "Benchmark / Lステップ"
+    },
+    {
+      "value": "social",
+      "label": "Facebook / Instagram",
+      "priority": 3,
+      "frequency": "low",
+      "note": "オーガニック投稿"
+    },
+    {
+      "value": "video",
+      "label": "YouTube",
+      "priority": 4,
+      "frequency": "low",
+      "note": "オーガニック動画／動画説明欄"
+    },
+    {
+      "value": "cpc",
+      "label": "有料広告",
+      "priority": 5,
+      "frequency": "none",
+      "note": "未使用・予約"
+    }
+  ]
+}

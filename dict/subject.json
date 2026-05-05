@@ -1,0 +1,64 @@
+{
+  "_meta": {
+    "title": "utm_campaign の [対象] 辞書",
+    "rule_version": "v1.2",
+    "updated": "2026-05-04",
+    "note": "セクション順表示。同セクション内は priority 昇順。サービス4値は全保持（将来拡張口）。"
+  },
+  "sections": [
+    {
+      "name": "service",
+      "label": "サービス",
+      "values": [
+        { "value": "oudo", "label": "王道シリーズ全体", "priority": 1, "frequency": "high" },
+        { "value": "compass", "label": "1sec.Compass", "priority": 2, "frequency": "low" },
+        { "value": "media", "label": "1sec.メディア", "priority": 3, "frequency": "low" },
+        { "value": "reborn", "label": "Re-Born", "priority": 4, "frequency": "low" }
+      ]
+    },
+    {
+      "name": "subject_high",
+      "label": "科目（高頻度）",
+      "values": [
+        { "value": "derm", "label": "皮膚科", "priority": 11, "frequency": "high" },
+        { "value": "abx", "label": "抗菌薬", "priority": 12, "frequency": "high" },
+        { "value": "resp", "label": "呼吸器科", "priority": 13, "frequency": "high" },
+        { "value": "neuro", "label": "神経科", "priority": 14, "frequency": "high" },
+        { "value": "hema", "label": "血液内科", "priority": 15, "frequency": "high" }
+      ]
+    },
+    {
+      "name": "subject_mid",
+      "label": "科目（中頻度）",
+      "values": [
+        { "value": "er", "label": "救急", "priority": 21, "frequency": "mid" },
+        { "value": "image", "label": "画像診断（胸部・腹部含む）", "priority": 22, "frequency": "mid" },
+        { "value": "dx", "label": "臨床診断学", "priority": 23, "frequency": "mid" },
+        { "value": "cardio", "label": "循環器科", "priority": 24, "frequency": "mid" }
+      ]
+    },
+    {
+      "name": "subject_low",
+      "label": "科目（低頻度・将来用）",
+      "collapsed_by_default": true,
+      "values": [
+        { "value": "endo", "label": "内分泌科", "priority": 31, "frequency": "low" },
+        { "value": "path", "label": "臨床病理", "priority": 32, "frequency": "low" },
+        { "value": "dental", "label": "歯科", "priority": 33, "frequency": "low" },
+        { "value": "nutri", "label": "栄養学", "priority": 34, "frequency": "low" },
+        { "value": "ophth", "label": "眼科", "priority": 35, "frequency": "low" },
+        { "value": "ortho", "label": "整形外科", "priority": 36, "frequency": "low" },
+        { "value": "behav", "label": "行動診療科", "priority": 37, "frequency": "low" },
+        { "value": "gi", "label": "消化器科", "priority": 38, "frequency": "low" },
+        { "value": "ent", "label": "耳科", "priority": 39, "frequency": "low" },
+        { "value": "iv", "label": "輸液", "priority": 40, "frequency": "low" },
+        { "value": "anes", "label": "麻酔科", "priority": 41, "frequency": "low" }
+      ]
+    },
+    {
+      "name": "other",
+      "label": "その他",
+      "values": []
+    }
+  ]
+}

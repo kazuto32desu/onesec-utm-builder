@@ -1,0 +1,6 @@
+.DS_Store
+config.local.js
+node_modules/
+*.log
+.vscode/
+.idea/

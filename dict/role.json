@@ -1,0 +1,69 @@
+{
+  "_meta": {
+    "title": "utm_campaign の [ロール] 辞書（v1.2 で4カテゴリ化）",
+    "rule_version": "v1.2",
+    "updated": "2026-05-04",
+    "note": "すべての訴求で任意。同一CP内に複数配信があるとき識別用。辞書にない値も自由入力可（小文字英数字＋_）。"
+  },
+  "categories": [
+    {
+      "name": "sequence",
+      "label": "A. シーケンス番号（汎用シリーズ）",
+      "description": "連載動画・章別配信など、N回中M回目を識別",
+      "values": [
+        { "value": "ep1", "label": "第1回 / Episode 1", "priority": 1 },
+        { "value": "ep2", "label": "第2回 / Episode 2", "priority": 2 },
+        { "value": "ep3", "label": "第3回 / Episode 3", "priority": 3 },
+        { "value": "ep4", "label": "第4回 / Episode 4", "priority": 4 },
+        { "value": "ep5", "label": "第5回 / Episode 5", "priority": 5 },
+        { "value": "ep6", "label": "第6回 / Episode 6", "priority": 6 },
+        { "value": "ep7", "label": "第7回 / Episode 7", "priority": 7 },
+        { "value": "ep8", "label": "第8回 / Episode 8", "priority": 8 },
+        { "value": "ep9", "label": "第9回 / Episode 9", "priority": 9 },
+        { "value": "ep10", "label": "第10回 / Episode 10", "priority": 10 },
+        { "value": "ep11", "label": "第11回 / Episode 11", "priority": 11 },
+        { "value": "ep12", "label": "第12回 / Episode 12", "priority": 12 },
+        { "value": "ep13", "label": "第13回 / Episode 13", "priority": 13 },
+        { "value": "ep14", "label": "第14回 / Episode 14", "priority": 14 },
+        { "value": "ep15", "label": "第15回 / Episode 15", "priority": 15 },
+        { "value": "ep16", "label": "第16回 / Episode 16", "priority": 16 },
+        { "value": "ep17", "label": "第17回 / Episode 17", "priority": 17 },
+        { "value": "ep18", "label": "第18回 / Episode 18", "priority": 18 },
+        { "value": "ep19", "label": "第19回 / Episode 19", "priority": 19 },
+        { "value": "ep20", "label": "第20回 / Episode 20", "priority": 20 }
+      ]
+    },
+    {
+      "name": "notice",
+      "label": "B. 告知（フェーズ別）",
+      "description": "セミナー等の事前告知。第N告知で識別",
+      "values": [
+        { "value": "notice1", "label": "第1告知（初回告知）", "priority": 1, "note": "1-Day D-65 / メディア協賛初回 / Compass 告知①" },
+        { "value": "notice2", "label": "第2告知（再告知）", "priority": 2, "note": "1-Day D-30 / Compass 告知②" },
+        { "value": "notice3", "label": "第3告知（直前告知）", "priority": 3, "note": "1-Day D-15" }
+      ]
+    },
+    {
+      "name": "reminder",
+      "label": "C. リマインド（直前催促）",
+      "description": "申込者向けの直前リマインド配信",
+      "values": [
+        { "value": "remind_d14", "label": "2週間前リマインド", "priority": 1 },
+        { "value": "remind_d7", "label": "1週間前リマインド", "priority": 2, "note": "1-Day D-7 / Compass D-7" },
+        { "value": "remind_d3", "label": "3日前リマインド", "priority": 3, "note": "1-Day D-3" },
+        { "value": "remind_d1", "label": "前日リマインド", "priority": 4 },
+        { "value": "remind_dday", "label": "当日リマインド", "priority": 5 }
+      ]
+    },
+    {
+      "name": "followup",
+      "label": "D. 配信後フォロー",
+      "description": "セミナー後の録画・質疑応答・要約配信",
+      "values": [
+        { "value": "qa", "label": "質疑応答アーカイブ配信", "priority": 1, "note": "1-Day D+22" },
+        { "value": "archive", "label": "録画配信告知", "priority": 2, "note": "Compass セミナー後 / メディア協賛後" },
+        { "value": "recap", "label": "振り返り／要約配信", "priority": 3 }
+      ]
+    }
+  ]
+}
