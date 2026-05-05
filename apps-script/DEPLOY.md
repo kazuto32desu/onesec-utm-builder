@@ -28,9 +28,9 @@ UTMビルダーのバックエンドとして動く Google Apps Script Web App �
 2. 下のほう「スクリプト プロパティ」セクションで「**スクリプト プロパティを追加**」
 3. 以下3つを追加:
 
-| プロパティ | 値 |
+| プロパティ名（左欄） | 値（右欄に何を入れるか） |
 |---|---|
-| `SHEET_ID` | 手順1でコピーしたID |
+| `SHEET_ID` | ⚠️ **手順1でコピーした実際のID文字列を貼る**（例: `1Rqv46cB1g0mfgJo0vfONyLyHlS-gKFpBUAWQb3IBOZg`）。「手順1でコピーしたID」という文字列をそのまま貼らないこと！ |
 | `LOG_SHEET_NAME` | `log` |
 | `SHARED_SECRET` | 任意の長い文字列（例: `onesec-utm-builder-x9k2m4q8`）。**この値を後でフロント側にも入れる** |
 
