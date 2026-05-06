@@ -373,7 +373,7 @@
       date: state.date, subject, appeal, role,
     });
 
-    const composedUrls = UrlComposer.composeMultipleUrls({
+    const unified = UrlComposer.composeUnifiedUrl({
       lpUrl: state.lpUrl,
       sources,
       medium,
@@ -385,14 +385,14 @@
     // プレビュー（campaign）
     els.previewCampaign.textContent = campaign || "—";
 
-    // プレビュー（URL群）
-    renderPreviewUrls(composedUrls);
+    // プレビュー（統合URL 1本）
+    renderPreviewUrl(unified, sources);
 
-    // バリデーション
+    // バリデーション（統合済みsourceで検証）
     const validationState = {
       lpUrl: state.lpUrl,
       medium,
-      sources,
+      sources: unified ? [unified.source] : [],
       date: state.date,
       subject,
       appeal,
@@ -401,57 +401,61 @@
       term: state.term,
     };
     const result = Validator.validate(validationState);
-    renderValidation(result);
+    renderValidation(result, unified);
 
     // ボタン活性
     const composable = Validator.isComposable(validationState);
     els.btnLog.disabled = !composable || !result.ok || !SheetsClient.isConfigured();
 
     // 状態を後で参照する用に保存
-    state._resolved = { medium, subject, appeal, role, sources, campaign, urls: composedUrls };
+    state._resolved = { medium, subject, appeal, role, sources, campaign, unified };
   }
 
-  function renderPreviewUrls(urls) {
-    els.previewUrlCount.textContent = urls.length > 1 ? `${urls.length}本` : "";
+  function renderPreviewUrl(unified, sources) {
     els.previewUrls.innerHTML = "";
-    if (urls.length === 0) {
+    if (!unified) {
+      els.previewUrlCount.textContent = "";
       const ph = document.createElement("code");
       ph.className = "preview-url placeholder";
       ph.textContent = "—";
       els.previewUrls.appendChild(ph);
       return;
     }
-    urls.forEach(({ source, url }, idx) => {
-      const row = document.createElement("div");
-      row.className = "preview-url-row";
 
+    // バッジ: 複数リスト同時配信時に表示
+    els.previewUrlCount.textContent = unified.sourceCount > 1 ? `${unified.sourceCount}リスト統合` : "";
+
+    const row = document.createElement("div");
+    row.className = "preview-url-row";
+
+    if (unified.sourceCount > 1) {
       const tag = document.createElement("span");
       tag.className = "url-source-tag";
-      tag.textContent = `📨 ${source}`;
+      tag.textContent = `📨 配信先リスト (${unified.sourceCount}件): ` + sources.join(" / ");
       row.appendChild(tag);
+    }
 
-      const code = document.createElement("code");
-      code.textContent = url;
-      row.appendChild(code);
+    const code = document.createElement("code");
+    code.textContent = unified.url;
+    row.appendChild(code);
 
-      const btn = document.createElement("button");
-      btn.className = "btn btn-secondary btn-mini";
-      btn.textContent = "📋 コピー";
-      btn.addEventListener("click", async () => {
-        try {
-          await navigator.clipboard.writeText(url);
-          setStatus(`✅ ${source} のURLをコピーしました`, "success");
-        } catch (err) {
-          setStatus("コピー失敗: " + err.message, "error");
-        }
-      });
-      row.appendChild(btn);
-
-      els.previewUrls.appendChild(row);
+    const btn = document.createElement("button");
+    btn.className = "btn btn-secondary btn-mini";
+    btn.textContent = "📋 コピー";
+    btn.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(unified.url);
+        setStatus("✅ URLをコピーしました", "success");
+      } catch (err) {
+        setStatus("コピー失敗: " + err.message, "error");
+      }
     });
+    row.appendChild(btn);
+
+    els.previewUrls.appendChild(row);
   }
 
-  function renderValidation({ ok, errors, warnings }) {
+  function renderValidation({ ok, errors, warnings }, unified) {
     if (errors.length > 0) {
       els.validation.className = "validation error";
       els.validation.innerHTML =
@@ -468,9 +472,13 @@
         "</ul>";
       return;
     }
-    if (ok && state._resolved && state._resolved.urls.length > 0) {
+    if (ok && unified) {
+      const ver = (window.UTM_DICT && window.UTM_DICT.meta && window.UTM_DICT.meta.rule_version) || "v?";
       els.validation.className = "validation success";
-      els.validation.textContent = `✅ OK — 規則v1.3 準拠（${state._resolved.urls.length}本のURL生成中）`;
+      els.validation.textContent =
+        unified.sourceCount > 1
+          ? `✅ OK — 規則${ver} 準拠（${unified.sourceCount}リスト統合の単一URL）`
+          : `✅ OK — 規則${ver} 準拠`;
     } else {
       els.validation.className = "validation";
       els.validation.textContent = "";
@@ -486,9 +494,10 @@
   // ============ Actions ============
 
   async function logCurrent() {
-    if (!state._resolved || state._resolved.urls.length === 0) return;
+    if (!state._resolved || !state._resolved.unified) return;
     setStatus("ログ記録中…", "loading");
     try {
+      const u = state._resolved.unified;
       const result = await SheetsClient.logEntries(
         {
           owner: state.owner,
@@ -501,9 +510,9 @@
           lpUrl: state.lpUrl,
           memo: state.memo,
         },
-        state._resolved.urls
+        [{ source: u.source, url: u.url }]
       );
-      const n = (result.rows || []).length || state._resolved.urls.length;
+      const n = (result.rows || []).length || 1;
       setStatus(`✅ ログ記録しました（${n}行追加）`, "success");
     } catch (err) {
       setStatus("❌ " + err.message, "error");

@@ -10,7 +10,7 @@
 <body>
   <header class="app-header">
     <h1>UTMキャンペーンURLビルダー</h1>
-    <p class="rule-badge">命名規則 <span id="rule-version">v1.3</span></p>
+    <p class="rule-badge">命名規則 <span id="rule-version">v1.4</span></p>
   </header>
 
   <main class="container">
@@ -38,7 +38,7 @@
 
         <!-- 複数選択モード（email のみ。チェックボックス群） -->
         <div id="source-multi" hidden>
-          <p class="hint">配信先リストを複数選択できます（選択した数だけURLが生成されます）</p>
+          <p class="hint">配信先リストを複数選択できます。複数選択時は <code>__</code> で連結された<strong>単一URLに統合</strong>されます（規則v1.4）。</p>
           <div id="source-multi-list" class="checkbox-list"></div>
         </div>
 

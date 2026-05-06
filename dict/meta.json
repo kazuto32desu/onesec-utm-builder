@@ -1,22 +1,26 @@
 {
-  "rule_version": "v1.3",
-  "rule_updated": "2026-05-05",
+  "rule_version": "v1.4",
+  "rule_updated": "2026-05-06",
   "naming_pattern": "[YYYYMM]_[サービス名]_[訴求][_ロール]",
   "rule_source_vault": "1sec.works/_ops/utm-naming-conventions.md",
   "rule_source_url": "https://github.com/kazuto32desu/onesec-utm-builder/blob/main/docs/naming-rules.md",
   "applicable_from": "2026-05-01",
   "old_rule_reference": "https://docs.google.com/document/d/1eRbTzgaOXLLmEeT8XjzWxNofUdUyiu-AXxohNOvL-ZI/edit",
+  "v1_4_changes": {
+    "source_multi": "複数source選択時の連結ルール: 各値を `__` (ダブルアンダースコア) で連結し、単一URLに統合。例: utm_source=email_benchmark_oudo_member__email_benchmark_oudo_1day"
+  },
   "v1_3_changes": {
     "medium": "8値に拡張: messaging/email/social/video/cpc/flyer/referral/_custom",
     "source": "LINE: line_fa_academy 削除 / Email: 複数選択（Benchmarkリスト群）対応 / Facebook: グループ2＋パートナー1に細分化 / 全媒体に_custom自由入力",
     "subject": "「対象」→「サービス名」にリネーム。値を5サービス+その他に削減（科目辞書を廃止）",
     "appeal": "_custom 自由入力を追加",
     "role": "v1〜v8 + _custom に大幅簡略化（旧 sequence/notice/reminder/followup を廃止）",
-    "ui": "メルマガ複数選択時は配信先ごとに個別URLを同時生成"
+    "ui": "メルマガ複数選択時は配信先ごとに個別URLを同時生成（v1.4で1URLに統合）"
   },
   "validation": {
     "lowercase_only": true,
     "allowed_chars_regex": "^[a-z0-9_]+$",
+    "multi_source_separator": "__",
     "campaign_min_elements": 3,
     "campaign_max_elements": 4,
     "yyyymm_pattern": "^\\d{6}$",

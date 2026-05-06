@@ -58,23 +58,36 @@
   }
 
   /**
-   * 完成URLを sources の配列分まとめて生成
-   * @param {Object} params - { lpUrl, sources: string[], medium, campaign, content, term }
-   * @returns {Array<{ source: string, url: string }>}
+   * 複数source選択時、規則v1.4に従い `__` で連結した単一値を返す
+   * @param {string[]} sources
+   * @returns {string}
    */
-  function composeMultipleUrls({ lpUrl, sources, medium, campaign, content, term }) {
-    if (!Array.isArray(sources) || sources.length === 0) return [];
-    return sources.map((source) => ({
-      source,
-      url: composeOneUrl({ lpUrl, source, medium, campaign, content, term }),
-    }));
+  function joinSources(sources) {
+    if (!Array.isArray(sources) || sources.length === 0) return "";
+    return sources.join("__");
+  }
+
+  /**
+   * 完成URLを sources を連結した1本に統合（v1.4）
+   * @param {Object} params - { lpUrl, sources: string[], medium, campaign, content, term }
+   * @returns {{ source: string, url: string, sourceCount: number } | null}
+   */
+  function composeUnifiedUrl({ lpUrl, sources, medium, campaign, content, term }) {
+    if (!Array.isArray(sources) || sources.length === 0) return null;
+    const joinedSource = joinSources(sources);
+    return {
+      source: joinedSource,
+      sourceCount: sources.length,
+      url: composeOneUrl({ lpUrl, source: joinedSource, medium, campaign, content, term }),
+    };
   }
 
   global.UrlComposer = {
     dateToYYYYMM,
     composeCampaign,
     composeOneUrl,
-    composeMultipleUrls,
+    composeUnifiedUrl,
+    joinSources,
     appendQuery,
   };
 })(window);

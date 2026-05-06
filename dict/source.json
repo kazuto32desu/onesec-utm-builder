@@ -1,9 +1,10 @@
 {
   "_meta": {
     "title": "utm_source 辞書",
-    "rule_version": "v1.3",
-    "updated": "2026-05-05",
-    "note": "v1.3 大幅再編。媒体ごとに UI が変わる: messaging=単一/email=複数選択/social=単一階層/その他=自由入力。multi_select_when_medium で配信先リスト複数選択を有効化。",
+    "rule_version": "v1.4",
+    "updated": "2026-05-06",
+    "note": "v1.4 で複数選択時の挙動を変更: 複数選んだ場合も1つのURLに統合し、utm_sourceは __（ダブルアンダースコア）で連結する。例: utm_source=email_benchmark_oudo_member__email_benchmark_oudo_1day",
+    "multi_source_separator": "__",
     "selection_mode_by_medium": {
       "messaging": "single",
       "email": "multi",

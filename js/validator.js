@@ -41,10 +41,16 @@
         errors.push(`${name} は半角小文字英数字＋_ のみ使えます: "${value}"`);
       }
     });
+    // sources は statejoin済み（v1.4以降は連結された単一値）
     (state.sources || []).forEach((s) => {
-      if (s && !ALLOWED.test(s)) {
-        errors.push(`utm_source は半角小文字英数字＋_ のみ使えます: "${s}"`);
-      }
+      // 連結済みsource（__区切り）を許容: 各セグメントを分解して検証
+      if (!s) return;
+      const segments = s.split("__");
+      segments.forEach((seg) => {
+        if (seg && !ALLOWED.test(seg)) {
+          errors.push(`utm_source は半角小文字英数字＋_ のみ使えます: "${seg}"`);
+        }
+      });
     });
 
     // utm_term は cpc 時のみ
