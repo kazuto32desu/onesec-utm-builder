@@ -31,17 +31,18 @@ function getProps() {
 
 const HEADER = [
   "timestamp",
+  "campaign_name_jp",
   "owner",
+  "delivery_date",
+  "scale",
+  "memo",
   "utm_source",
   "utm_medium",
   "utm_campaign",
   "utm_content",
   "utm_term",
-  "delivery_date",
-  "scale",
   "lp_url",
   "full_url",
-  "memo",
   "rule_version",
 ];
 

@@ -27,6 +27,7 @@
     roleCustom: "",
     content: "",
     term: "",
+    campaignNameJp: "",
     owner: "",
     scale: "",
     memo: "",
@@ -56,6 +57,7 @@
       "content",
       "term",
       "term-field",
+      "meta-campaign-name",
       "meta-owner",
       "meta-scale",
       "meta-memo",
@@ -285,6 +287,7 @@
   function bindInputs() {
     els.lpUrl.addEventListener("input", () => { state.lpUrl = els.lpUrl.value.trim(); update(); });
     els.deliveryDate.addEventListener("input", () => { state.date = els.deliveryDate.value; update(); });
+    els.metaCampaignName.addEventListener("input", () => { state.campaignNameJp = els.metaCampaignName.value; update(); });
     els.metaOwner.addEventListener("input", () => { state.owner = els.metaOwner.value; });
     els.metaScale.addEventListener("input", () => { state.scale = els.metaScale.value; });
     els.metaMemo.addEventListener("input", () => { state.memo = els.metaMemo.value; });
@@ -500,6 +503,7 @@
       const u = state._resolved.unified;
       const result = await SheetsClient.logEntries(
         {
+          campaignNameJp: state.campaignNameJp,
           owner: state.owner,
           medium: state._resolved.medium,
           campaign: state._resolved.campaign,

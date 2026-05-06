@@ -33,17 +33,18 @@
     const ts = new Date().toISOString();
     const entries = urls.map((u) => ({
       timestamp: ts,
+      campaign_name_jp: cp.campaignNameJp || "",
       owner: cp.owner || "",
+      delivery_date: cp.deliveryDate || "",
+      scale: cp.scale || "",
+      memo: cp.memo || "",
       utm_source: u.source || "",
       utm_medium: cp.medium || "",
       utm_campaign: cp.campaign || "",
       utm_content: cp.content || "",
       utm_term: cp.term || "",
-      delivery_date: cp.deliveryDate || "",
-      scale: cp.scale || "",
       lp_url: cp.lpUrl || "",
       full_url: u.url || "",
-      memo: cp.memo || "",
       rule_version: (global.UTM_DICT && global.UTM_DICT.meta && global.UTM_DICT.meta.rule_version) || "",
     }));
 

@@ -87,21 +87,56 @@
         </div>
       </details>
 
-      <details class="advanced">
-        <summary>メタ情報（ログに記録される）</summary>
+      <details class="advanced" open>
+        <summary>📝 施策の記録（スプレッドシートに残ります）</summary>
+
         <div class="field">
-          <label for="meta-owner">担当者</label>
+          <label for="meta-campaign-name">
+            キャンペーン名（人が読む用）<span class="required">*</span>
+          </label>
+          <input type="text" id="meta-campaign-name" placeholder="例: 皮膚科の王道 初月無料CP 告知第1回" required />
+          <p class="hint">スプレッドシートで一覧した時の見出しになります。後から検索しやすい言葉で。</p>
+        </div>
+
+        <div class="field">
+          <label for="meta-owner">配信担当者</label>
           <select id="meta-owner">
             <option value="">— 選択 —</option>
           </select>
         </div>
+
         <div class="field">
-          <label for="meta-scale">配信規模</label>
-          <input type="text" id="meta-scale" placeholder="1300件 / 全体配信枠 など" />
+          <label for="meta-scale">配信先・規模</label>
+          <input type="text" id="meta-scale" placeholder="例: Benchmark王道会員 約450名 / LINE全体配信枠 / チラシ300部" />
+          <p class="hint">どんなリストへ何人くらいに届くか</p>
         </div>
+
         <div class="field">
-          <label for="meta-memo">施策メモ</label>
-          <textarea id="meta-memo" rows="3" placeholder="仮説・意図・関連議事録wikilink"></textarea>
+          <label for="meta-memo">施策の狙い・備考</label>
+          <textarea id="meta-memo" rows="3" placeholder="仮説、関連議事録のwikilink、配信文面リンク、注意点など自由記述"></textarea>
+        </div>
+      </details>
+
+      <details class="advanced">
+        <summary>📊 ログに記録される14列</summary>
+        <div class="log-columns">
+          <ol>
+            <li><strong>配信日時</strong> — 「発行＆ログに記録」を押した日時</li>
+            <li><strong>キャンペーン名</strong> — 上で入れた人が読む用の名前</li>
+            <li><strong>配信担当者</strong></li>
+            <li><strong>配信予定日</strong></li>
+            <li><strong>配信規模</strong></li>
+            <li><strong>備考</strong> — 施策の狙い・関連リンク等</li>
+            <li><strong>utm_source</strong> — 配信セグメント（複数なら __ 連結）</li>
+            <li><strong>utm_medium</strong> — 配信媒体</li>
+            <li><strong>utm_campaign</strong> — YYYYMM_サービス_訴求[_ロール]</li>
+            <li><strong>utm_content</strong> — クリエイティブ差分（任意）</li>
+            <li><strong>utm_term</strong> — 広告キーワード（任意）</li>
+            <li><strong>LP URL</strong> — UTM 付与前のページURL</li>
+            <li><strong>完成URL</strong> — UTM 付与済の最終URL</li>
+            <li><strong>規則ver</strong> — 発行時の命名規則バージョン（v1.4等）</li>
+          </ol>
+          <p class="hint">スプシ: <a href="https://docs.google.com/spreadsheets/d/1Rqv46cB1g0mfgJo0vfONyLyHlS-gKFpBUAWQb3IBOZg/edit" target="_blank">UTM管理 v1</a> の <code>log</code> シート</p>
         </div>
       </details>
     </section>
@@ -146,10 +181,10 @@
     </p>
   </footer>
 
-  <script src="js/dict-loader.v14.js"></script>
-  <script src="js/url-composer.v14.js"></script>
-  <script src="js/validator.v14.js"></script>
-  <script src="js/sheets-client.v14.js"></script>
-  <script src="js/app.v14.js"></script>
+  <script src="js/dict-loader.v15.js"></script>
+  <script src="js/url-composer.v15.js"></script>
+  <script src="js/validator.v15.js"></script>
+  <script src="js/sheets-client.v15.js"></script>
+  <script src="js/app.v15.js"></script>
 </body>
 </html>
