@@ -142,7 +142,19 @@ function setup() {
     Logger.log("✓ 既存の log シート「" + sheet.getName() + "」を使用（" + sheet.getLastRow() + "行）");
   }
 
-  // Step 4: ヘッダー書込
+  // Step 3.5: スキーマ移行判定（v1.4 → v1.5）
+  // B1 のヘッダーが "campaign_name_jp" でないかつ既存データがあれば migrate を自動実行
+  const lastRowBefore = sheet.getLastRow();
+  const headerB = String(sheet.getRange(1, 2).getValue() || "").trim();
+  const needsMigration = (headerB !== "campaign_name_jp") && (lastRowBefore > 1);
+  if (needsMigration) {
+    Logger.log("旧スキーマ検知（B1=「" + headerB + "」、既存 " + (lastRowBefore - 1) + " 行）→ migrate_to_v15 を自動実行");
+    migrate_to_v15();
+    Logger.log("✅ setup 完了（migration 経由）: 列数=" + HEADER.length);
+    return "OK (migrated)";
+  }
+
+  // Step 4: 通常のヘッダー書込
   Logger.log("HEADER 列数: " + HEADER.length);
   try {
     const range = sheet.getRange(1, 1, 1, HEADER.length);

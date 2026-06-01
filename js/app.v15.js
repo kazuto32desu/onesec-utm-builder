@@ -612,6 +612,9 @@
       bindInputs();
       rebuildSourceUI();
 
+      // HTML 側で初期値が入っているフィールド（lp-url のデフォルト値など）を state に反映
+      state.lpUrl = (els.lpUrl.value || "").trim();
+
       els.btnLog.addEventListener("click", logCurrent);
       els.btnLoadRecent.addEventListener("click", loadRecent);
       els.reloadDict.addEventListener("click", async (e) => {
