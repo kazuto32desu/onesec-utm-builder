@@ -1,11 +1,16 @@
 {
-  "rule_version": "v1.4",
-  "rule_updated": "2026-05-06",
+  "rule_version": "v1.5",
+  "rule_updated": "2026-05-08",
   "naming_pattern": "[YYYYMM]_[サービス名]_[訴求][_ロール]",
   "rule_source_vault": "1sec.works/_ops/utm-naming-conventions.md",
   "rule_source_url": "https://github.com/kazuto32desu/onesec-utm-builder/blob/main/docs/naming-rules.md",
   "applicable_from": "2026-05-01",
   "old_rule_reference": "https://docs.google.com/document/d/1eRbTzgaOXLLmEeT8XjzWxNofUdUyiu-AXxohNOvL-ZI/edit",
+  "v1_5_changes": {
+    "log_schema": "スプシlogシートに campaign_name_jp 列（B列）を追加。人が読む用のキャンペーン名を保存し、見出しとして使う",
+    "form": "メタ情報 → 📝 施策の記録 にリネーム、キャンペーン名（人が読む用）を必須入力に",
+    "migration": "Code.gs に migrate_to_v15() を追加。既存B-M列を1列右にシフトし、B列を campaign_name_jp 用に確保"
+  },
   "v1_4_changes": {
     "source_multi": "複数source選択時の連結ルール: 各値を `__` (ダブルアンダースコア) で連結し、単一URLに統合。例: utm_source=email_benchmark_oudo_member__email_benchmark_oudo_1day"
   },

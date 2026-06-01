@@ -29,22 +29,77 @@ function getProps() {
   };
 }
 
+// v1.4 までの列順を維持しつつ、B列に campaign_name_jp を挿入（v1.5 列順）
 const HEADER = [
-  "timestamp",
-  "campaign_name_jp",
-  "owner",
-  "delivery_date",
-  "scale",
-  "memo",
-  "utm_source",
-  "utm_medium",
-  "utm_campaign",
-  "utm_content",
-  "utm_term",
-  "lp_url",
-  "full_url",
-  "rule_version",
+  "timestamp",          // A
+  "campaign_name_jp",   // B 【v1.5新規】 人が読む用のキャンペーン名（見出し）
+  "owner",              // C
+  "utm_source",         // D
+  "utm_medium",         // E
+  "utm_campaign",       // F
+  "utm_content",        // G
+  "utm_term",           // H
+  "delivery_date",      // I
+  "scale",              // J
+  "lp_url",             // K
+  "full_url",           // L
+  "memo",               // M
+  "rule_version",       // N
 ];
+
+// ========== v1.4 → v1.5 マイグレーション（1回だけ実行） ==========
+
+/**
+ * migrate_to_v15() — v1.4 期の既存データ（13列）を v1.5 形式（14列）に移行
+ * 既存 B2:M(last) を C2:N(last) にシフトして、B列に campaign_name_jp を入れる場所を確保
+ * 何度実行しても安全（idempotent: 既に migrate 済みなら何もしない）
+ */
+function migrate_to_v15() {
+  Logger.log("migrate_to_v15() 開始");
+  const props = getProps();
+  if (!props.sheetId) throw new Error("SHEET_ID 未設定");
+
+  const ss = SpreadsheetApp.openById(props.sheetId);
+  const sheet = ss.getSheetByName(props.logSheetName);
+  if (!sheet) throw new Error("ログシートが見つかりません: " + props.logSheetName);
+
+  // 既に migrate 済みか判定（B1のヘッダーが "campaign_name_jp" ならOK）
+  const headerB = String(sheet.getRange(1, 2).getValue() || "").trim();
+  if (headerB === "campaign_name_jp") {
+    Logger.log("✓ 既に v1.5 列順に移行済み（B列が campaign_name_jp）");
+    return "already-migrated";
+  }
+
+  const lastRow = sheet.getLastRow();
+  const currentLastCol = sheet.getLastColumn();
+  Logger.log("既存サイズ: rows=" + lastRow + " cols=" + currentLastCol);
+
+  if (currentLastCol !== 13) {
+    Logger.log("⚠️ 既存列数が13ではない: " + currentLastCol + " — そのまま進めるが要確認");
+  }
+
+  // 既存データを1列右へシフト（B2:M(last) → C2:N(last)）
+  if (lastRow > 1) {
+    const numColsToShift = Math.min(currentLastCol - 1, 12); // B以降の列数（最大12=B-M）
+    if (numColsToShift > 0) {
+      const range = sheet.getRange(2, 2, lastRow - 1, numColsToShift);
+      const values = range.getValues();
+      sheet.getRange(2, 3, lastRow - 1, numColsToShift).setValues(values);
+      sheet.getRange(2, 2, lastRow - 1, 1).clearContent();
+      Logger.log("✓ 既存 " + (lastRow - 1) + " 行を B→C へシフト");
+    }
+  }
+
+  // 新ヘッダー (14列) を1行目に書き込み（既存ヘッダーを上書き）
+  sheet.getRange(1, 1, 1, HEADER.length)
+       .setValues([HEADER])
+       .setFontWeight("bold")
+       .setBackground("#f0f0f0");
+  sheet.setFrozenRows(1);
+
+  Logger.log("✅ migrate_to_v15 完了: 列数=" + HEADER.length + " (B列=campaign_name_jp)");
+  return "migrated";
+}
 
 // ========== 初期化（手動で1回実行） ==========
 

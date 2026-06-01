@@ -31,21 +31,22 @@
       throw new Error("Apps Script Web App URL が未設定です（js/sheets-client.js を編集）");
     }
     const ts = new Date().toISOString();
+    // 列順は Code.gs HEADER と同じ（A〜N）
     const entries = urls.map((u) => ({
-      timestamp: ts,
-      campaign_name_jp: cp.campaignNameJp || "",
-      owner: cp.owner || "",
-      delivery_date: cp.deliveryDate || "",
-      scale: cp.scale || "",
-      memo: cp.memo || "",
-      utm_source: u.source || "",
-      utm_medium: cp.medium || "",
-      utm_campaign: cp.campaign || "",
-      utm_content: cp.content || "",
-      utm_term: cp.term || "",
-      lp_url: cp.lpUrl || "",
-      full_url: u.url || "",
-      rule_version: (global.UTM_DICT && global.UTM_DICT.meta && global.UTM_DICT.meta.rule_version) || "",
+      timestamp: ts,                                          // A
+      campaign_name_jp: cp.campaignNameJp || "",              // B (v1.5新規)
+      owner: cp.owner || "",                                  // C
+      utm_source: u.source || "",                             // D
+      utm_medium: cp.medium || "",                            // E
+      utm_campaign: cp.campaign || "",                        // F
+      utm_content: cp.content || "",                          // G
+      utm_term: cp.term || "",                                // H
+      delivery_date: cp.deliveryDate || "",                   // I
+      scale: cp.scale || "",                                  // J
+      lp_url: cp.lpUrl || "",                                 // K
+      full_url: u.url || "",                                  // L
+      memo: cp.memo || "",                                    // M
+      rule_version: (global.UTM_DICT && global.UTM_DICT.meta && global.UTM_DICT.meta.rule_version) || "", // N
     }));
 
     const payload = {
